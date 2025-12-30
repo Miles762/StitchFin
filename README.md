@@ -628,7 +628,6 @@ See `frontend/README.md` for detailed documentation.
 *Create and manage AI agents with provider configuration and tool enablement*
 
 **3. Live Chat Interface**
-![Chat Interface]
 *Real-time messaging with cost tracking, latency metrics, and provider visibility*
 
 **4. Voice Recording**
@@ -636,7 +635,6 @@ See `frontend/README.md` for detailed documentation.
 *Browser-based audio recording with waveform visualization and upload support*
 
 **5. Analytics Dashboard**
-![Analytics Dashboard]
 *Comprehensive usage statistics with charts for costs, tokens, and provider breakdown*
 
 
@@ -716,11 +714,9 @@ curl -X GET http://localhost:8000/api/sessions/SESSION_UUID/voice/audio/MESSAGE_
 ### Screenshots
 
 **Voice Recording Interface**
-![Voice Recording UI]
 *Browser-based recording with timer and waveform visualization*
 
 **Voice Session Transcript**
-![Voice Transcript]
 *Full conversation history with STT/TTS latency metrics 
 
 
