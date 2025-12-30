@@ -716,29 +716,23 @@ curl -X GET http://localhost:8000/api/sessions/SESSION_UUID/voice/audio/MESSAGE_
 
 ## 📈 Future Enhancements
 
-The following features could be added to further expand the platform:
+With more time, the platform could be extended with additional features to improve functionality and production readiness:
 
-1. **Async Mode**
-   - Job queue (Celery + Redis)
-   - Background message processing
-   - Completion webhooks for long-running tasks
+**Immediate (1-2 days)**
+- Webhook support for external system notifications on session completion
+- Edit agent configuration functionality (currently only create/delete)
+- Rate limiting per tenant using Redis to prevent abuse
 
-2. **Real-time Features**
-   - WebSocket support for streaming responses
-   - Server-Sent Events (SSE) for live updates
+**Medium-term (1-2 weeks)**
+- WebSocket support for real-time response streaming (better UX for long responses)
+- Additional tools: Stripe payment processing, Google Calendar booking, Salesforce CRM integration
+- Advanced analytics: cost forecasting, anomaly detection, budget alerts
+- RBAC (Role-Based Access Control) with admin vs analyst roles within tenants
 
-
-3. **Additional Tools**
-   - Payment processing (Stripe integration)
-   - Calendar booking (Google Calendar API)
-   - Email sending (SendGrid/Resend)
-   - CRM integration (Salesforce, HubSpot)
-
-4. **Enterprise Features**
-   - Multi-user RBAC within tenants (admin, developer, viewer roles)
-   - Cost forecasting & budget alerts
-   - Rate limiting per tenant/agent
-   - Audit logs with compliance exports
-   - SSO integration (SAML, OAuth)
+**Long-term (Production Readiness)**
+- HTTPS with API key hashing and encrypted environment variables
+- Kubernetes deployment with auto-scaling, read replicas, and health checks
+- Prometheus metrics with Grafana dashboards and alerting
+- Compliance features: GDPR audit logs, data retention policies, SOC2 preparation
 
 
