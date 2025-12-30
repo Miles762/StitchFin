@@ -124,6 +124,11 @@ alembic upgrade head
 python scripts/seed.py
 ```
 
+This creates:
+- **2 Tenants**: TechCorp (software/SaaS) and HealthFirst (healthcare)
+- **6 Agents**: 3 per tenant with different provider configurations
+- **13 Invoices**: Company-specific invoice data for testing
+
 **Save the API keys printed by the seed script!** You'll need them for API requests.
 
 #### 6. Start Backend Server
@@ -279,19 +284,35 @@ curl -X POST http://localhost:8000/api/sessions/SESSION_UUID/messages \\
 
 The Invoice Lookup tool is automatically available for agents with `enabled_tools: ["invoice_lookup"]`.
 
-### Available Mock Invoices
+### Available Mock Invoices (Company-Specific)
 
-- **INV-001**: $1,500.00, paid, due 2025-01-15
-- **INV-002**: $2,300.50, pending, due 2025-01-20
-- **INV-003**: $850.75, overdue, due 2024-12-01
+**TechCorp Invoices:**
+- **INV-TC-001**: $15,000.00, paid - Annual Enterprise License
+- **INV-TC-002**: $8,500.00, pending - Professional Plan
+- **INV-TC-003**: $3,200.00, overdue - Consulting Services
+- **INV-TC-004**: $25,000.00, paid - Custom Development
+- **INV-TC-005**: $12,000.00, pending - Premium Support
+- **INV-TC-006**: $5,500.00, overdue - Integration Services
+
+**HealthFirst Invoices:**
+- **INV-HF-001**: $45,000.00, paid - Medical Equipment Supply
+- **INV-HF-002**: $28,500.00, pending - Pharmaceutical Supplies
+- **INV-HF-003**: $12,750.00, overdue - Diagnostic Equipment
+- **INV-HF-004**: $67,000.00, paid - MRI Machine Installation
+- **INV-HF-005**: $19,200.00, pending - Medical Software Licensing
+- **INV-HF-006**: $8,900.00, overdue - Specialized Equipment Rental
+- **INV-HF-007**: $34,000.00, paid - Emergency Response Equipment
+
+*Note: Each tenant can only access their own invoices (tenant isolation enforced)*
 
 ### Test Tool Execution
 
 ```bash
+# Using TechCorp API key
 curl -X POST http://localhost:8000/api/sessions/SESSION_UUID/messages \\
   -H "X-API-Key: YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
-  -d '{"content": "Look up invoice INV-001"}'
+  -d '{"content": "Look up invoice INV-TC-001"}'
 
 # Response will include invoice details + tool execution logged to database
 ```
