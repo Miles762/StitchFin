@@ -628,7 +628,7 @@ See `frontend/README.md` for detailed documentation.
 *Create and manage AI agents with provider configuration and tool enablement*
 
 **3. Live Chat Interface**
-![Chat Interface](docs/screenshots/frontend-chat.png)
+![Chat Interface]
 *Real-time messaging with cost tracking, latency metrics, and provider visibility*
 
 **4. Voice Recording**
