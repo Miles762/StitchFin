@@ -375,10 +375,6 @@ grep "correlation-id-here" backend.log
 grep "vendor_call" backend.log | jq
 ```
 
-
-![Structured Logging Output]
-*Sample structured JSON logs showing correlation IDs, provider calls, and retry attempts*
-
 ### Provider Call Tracking
 
 All vendor call attempts are logged to the `provider_calls` table:
@@ -394,9 +390,6 @@ ORDER BY created_at;
 -- - Success/failure status
 -- - Latency per attempt
 ```
-
-![Provider Call Audit Trail]
-*Database view of provider_calls table showing retry attempts, fallback events, and latency tracking*
 
 ## 💰 Cost Calculation
 
@@ -484,21 +477,23 @@ pytest --cov=app tests/
 ## 📁 Project Structure
 
 ```
-VocalBridge/
+StitchFin/
 ├── backend/
 │   ├── app/
 │   │   ├── api/              # API endpoints
 │   │   │   ├── tenants.py
 │   │   │   ├── agents.py
 │   │   │   ├── sessions.py
-│   │   │   └── analytics.py
+│   │   │   ├── analytics.py
+│   │   │   └── voice.py
 │   │   ├── models/           # Database models
 │   │   ├── schemas/          # Pydantic schemas
 │   │   ├── services/         # Business logic
 │   │   │   ├── vendors/      # Vendor adapters
 │   │   │   ├── reliability/  # Retry/fallback logic
 │   │   │   ├── billing/      # Cost calculation
-│   │   │   └── tools/        # Tool framework
+│   │   │   ├── tools/        # Tool framework
+│   │   │   └── voice/        # STT/TTS services
 │   │   ├── middleware/       # Auth, CORS, errors
 │   │   ├── utils/            # Database, logging
 │   │   └── main.py           # FastAPI app
@@ -506,9 +501,20 @@ VocalBridge/
 │   ├── scripts/              # Seed script
 │   ├── alembic/              # Database migrations
 │   └── requirements.txt
+├── frontend/
+│   ├── src/
+│   │   ├── components/       # React components
+│   │   ├── pages/            # Page components
+│   │   ├── services/         # API client
+│   │   └── App.tsx
+│   ├── package.json
+│   └── vite.config.ts
+├── docs/
+│   └── screenshots/          # Demo screenshots
 ├── docker-compose.yml        # PostgreSQL + Redis
+├── setup_and_run.sh          # Automated setup script
 ├── README.md                 # This file
-└── ARCHITECTURE.md           # Detailed architecture docs
+├── ARCHITECTURE.md           # HLD/LLD documentation
 ```
 
 ## 🔧 Configuration
@@ -627,15 +633,9 @@ See `frontend/README.md` for detailed documentation.
 ![Agents Page](docs/screenshots/frontend-agents.png)
 *Create and manage AI agents with provider configuration and tool enablement*
 
-**3. Live Chat Interface**
-*Real-time messaging with cost tracking, latency metrics, and provider visibility*
-
-**4. Voice Recording**
+**3. Voice Recording**
 ![Voice Recording](docs/screenshots/frontend-voice.png)
 *Browser-based audio recording with waveform visualization and upload support*
-
-**5. Analytics Dashboard**
-*Comprehensive usage statistics with charts for costs, tokens, and provider breakdown*
 
 
 
@@ -711,16 +711,6 @@ curl -X GET http://localhost:8000/api/sessions/SESSION_UUID/voice/audio/MESSAGE_
 ![Audio Download API](docs/screenshots/audio-download-swagger.png)
 *Swagger UI showing the audio download endpoint with response details*
 
-### Screenshots
-
-**Voice Recording Interface**
-*Browser-based recording with timer and waveform visualization*
-
-**Voice Session Transcript**
-*Full conversation history with STT/TTS latency metrics 
-
-
-**Audio Artifacts Table**
 ![Audio Artifacts](docs/screenshots/voice-artifacts-db.png)
 *Database storage of all audio files with metadata and transcripts*
 
