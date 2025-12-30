@@ -6,6 +6,9 @@ A production-ready SaaS platform for managing AI agents with multi-tenant isolat
 
 VocalBridge Ops is a backend service + dashboard that enables businesses (tenants) to create and manage AI agents (voice/chat bots) for automating workflows including billing and payment experiences.
 
+![System Architecture](docs/screenshots/architecture.png)
+*Multi-tenant agent gateway with vendor abstraction and reliability features*
+
 ### Key Features
 
 ✅ **Multi-Tenant Core** - Complete tenant isolation with API key authentication
@@ -131,6 +134,9 @@ This creates:
 
 **Save the API keys printed by the seed script!** You'll need them for API requests.
 
+![Seed Script Output](docs/screenshots/seed-output.png)
+*Seed script output showing generated API keys for TechCorp and HealthFirst tenants*
+
 #### 6. Start Backend Server
 
 ```bash
@@ -147,6 +153,9 @@ FastAPI automatically generates interactive API documentation:
 
 - **Swagger UI**: http://localhost:8000/docs
 - **ReDoc**: http://localhost:8000/redoc
+
+![Swagger API Documentation](docs/screenshots/swagger-ui.png)
+*Interactive Swagger UI showing all available API endpoints with request/response schemas*
 
 ### Sample curl Commands
 
@@ -317,6 +326,9 @@ curl -X POST http://localhost:8000/api/sessions/SESSION_UUID/messages \\
 # Response will include invoice details + tool execution logged to database
 ```
 
+![Invoice Lookup Tool Execution](docs/screenshots/invoice-tool-demo.png)
+*Chat session demonstrating invoice lookup tool execution with tenant-specific data isolation*
+
 ## 📊 Observability
 
 ### Correlation IDs
@@ -363,6 +375,10 @@ grep "correlation-id-here" backend.log
 grep "vendor_call" backend.log | jq
 ```
 
+
+![Structured Logging Output]
+*Sample structured JSON logs showing correlation IDs, provider calls, and retry attempts*
+
 ### Provider Call Tracking
 
 All vendor call attempts are logged to the `provider_calls` table:
@@ -378,6 +394,9 @@ ORDER BY created_at;
 -- - Success/failure status
 -- - Latency per attempt
 ```
+
+![Provider Call Audit Trail]
+*Database view of provider_calls table showing retry attempts, fallback events, and latency tracking*
 
 ## 💰 Cost Calculation
 
@@ -411,6 +430,9 @@ psql -U postgres -d vocalbridge -c "
 "
 ```
 
+![Usage Analytics Response](docs/screenshots/analytics-usage.png)
+*Usage analytics API response showing token counts, costs, and provider breakdown*
+
 ## 🗄️ Database Schema
 
 ### Core Tables
@@ -437,6 +459,9 @@ SELECT * FROM agents WHERE tenant_id = 'uuid';
 SELECT * FROM usage_events ORDER BY created_at DESC LIMIT 10;
 ```
 
+![Database Schema](docs/screenshots/database-schema.png)
+*PostgreSQL database showing all 9 tables with relationships and key indexes*
+
 ## 🧪 Running Tests
 
 ```bash
@@ -452,6 +477,9 @@ pytest tests/unit/test_vendors.py
 # Run with coverage
 pytest --cov=app tests/
 ```
+
+![Test Execution Output](docs/screenshots/pytest-output.png)
+*Pytest execution showing passing unit and integration tests with coverage report*
 
 ## 📁 Project Structure
 
@@ -541,45 +569,190 @@ kill -9 PID
 uvicorn app.main:app --port 8001
 ```
 
-## 📈 What's Next (Future Enhancements)
+## 🎨 Frontend Dashboard
 
-Given more time, the following features would be implemented:
+### Overview
 
-1. **Frontend Dashboard** (React + TypeScript + Vite)
-   - API key login
-   - Agent management UI
-   - Live chat interface
-   - Analytics charts
+A modern, production-ready React + TypeScript dashboard for managing AI agents, conducting live chat sessions, and analyzing usage metrics.
 
-2. **Voice Channel Integration** (Top Bonus)
-   - Browser audio recording
-   - Mocked STT/TTS services
-   - Audio artifact storage
-   - Voice session flow
+**Tech Stack:**
+- React 18 + TypeScript
+- Vite (build tool)
+- React Router (navigation)
+- React Query (API state management)
+- TailwindCSS (styling)
+- Recharts (analytics charts)
+- Lucide React (icons)
 
-3. **Async Mode**
+### Features
+
+✅ **API Key Authentication** - Secure login with persistent session storage
+✅ **Agent Management** - Create, view, configure, and delete AI agents
+✅ **Live Chat Interface** - Real-time messaging with cost/latency visibility
+✅ **Voice Recording** - Browser-based audio capture with file upload support
+✅ **Analytics Dashboard** - Usage statistics, cost breakdowns, provider comparison
+✅ **Responsive Design** - Works on mobile, tablet, and desktop
+✅ **Empty States & Onboarding** - Helpful guides for new users
+✅ **Error Recovery** - Graceful error handling with retry mechanisms
+
+### Quick Start
+
+```bash
+# Navigate to frontend directory
+cd frontend
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Open browser to http://localhost:5173
+```
+
+**Prerequisites:**
+- Node.js 18+
+- Backend API running on http://localhost:8000
+- API key from seed script (run `python backend/scripts/seed.py`)
+
+See `frontend/README.md` for detailed documentation.
+
+### Screenshots
+
+**1. Login Page**
+![Login Page](docs/screenshots/frontend-login.png)
+*Clean API key authentication with helpful instructions and example keys*
+
+**2. Agents Management**
+![Agents Page](docs/screenshots/frontend-agents.png)
+*Create and manage AI agents with provider configuration and tool enablement*
+
+**3. Live Chat Interface**
+![Chat Interface](docs/screenshots/frontend-chat.png)
+*Real-time messaging with cost tracking, latency metrics, and provider visibility*
+
+**4. Voice Recording**
+![Voice Recording](docs/screenshots/frontend-voice.png)
+*Browser-based audio recording with waveform visualization and upload support*
+
+**5. Analytics Dashboard**
+![Analytics Dashboard]
+*Comprehensive usage statistics with charts for costs, tokens, and provider breakdown*
+
+
+
+## 🎤 Voice Channel Integration (Bonus Feature)
+
+### Overview
+
+Complete voice interaction support with Speech-to-Text (STT) and Text-to-Speech (TTS) capabilities, enabling users to communicate with AI agents using voice.
+
+**Status: FULLY IMPLEMENTED**
+
+### Architecture
+
+```
+User Audio → Frontend Recorder → Backend API → Whisper STT → Agent Processing → TTS → Audio Response
+                                        ↓
+                                  Audio Artifacts
+                                   (Database)
+```
+
+### Features
+
+✅ **Browser Audio Recording** - MediaRecorder API with real-time waveform
+✅ **File Upload Support** - Accept pre-recorded audio files (.wav, .mp3, .m4a, .webm)
+✅ **OpenAI Whisper STT** - High-accuracy speech-to-text transcription
+✅ **OpenAI TTS** - Natural-sounding text-to-speech synthesis (6 voice options)
+✅ **Audio Artifact Storage** - All audio files stored in PostgreSQL with metadata
+✅ **Voice Session Management** - Dedicated "voice" channel with full transcript
+✅ **Download Endpoints** - Retrieve any audio artifact by ID
+✅ **Latency Tracking** - Measure STT, agent processing, and TTS latency separately
+
+### Implementation Details
+
+**Backend:**
+- `backend/app/services/voice/stt.py` - Whisper STT service
+- `backend/app/services/voice/tts.py` - OpenAI TTS service
+- `backend/app/services/voice/handler.py` - Voice message orchestrator
+- `backend/app/api/voice.py` - Voice API endpoints
+- `backend/app/models/voice.py` - VoiceArtifact database model
+
+**Frontend:**
+- `frontend/src/components/VoiceRecorder.tsx` - Recording UI component
+- `frontend/src/pages/Chat.tsx` - Integration with chat interface
+
+### API Usage
+
+```bash
+# Create a voice session
+curl -X POST http://localhost:8000/api/sessions \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "agent_id": "AGENT_UUID",
+    "customer_id": "customer-123",
+    "channel": "voice"
+  }'
+
+# Send voice message
+curl -X POST http://localhost:8000/api/sessions/SESSION_UUID/voice/message \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -F "audio_file=@recording.wav"
+
+# Download assistant's audio response (returns MP3 audio file)
+curl -X GET http://localhost:8000/api/sessions/SESSION_UUID/voice/audio/MESSAGE_UUID \
+  -H "X-API-Key: YOUR_API_KEY" \
+  --output response.mp3
+
+# Response: Binary MP3 audio file
+# Content-Type: audio/mpeg
+# The assistant's spoken response ready to play
+```
+
+![Audio Download API](docs/screenshots/audio-download-swagger.png)
+*Swagger UI showing the audio download endpoint with response details*
+
+### Screenshots
+
+**Voice Recording Interface**
+![Voice Recording UI]
+*Browser-based recording with timer and waveform visualization*
+
+**Voice Session Transcript**
+![Voice Transcript]
+*Full conversation history with STT/TTS latency metrics 
+
+
+**Audio Artifacts Table**
+![Audio Artifacts](docs/screenshots/voice-artifacts-db.png)
+*Database storage of all audio files with metadata and transcripts*
+
+## 📈 Future Enhancements
+
+The following features could be added to further expand the platform:
+
+1. **Async Mode**
    - Job queue (Celery + Redis)
    - Background message processing
-   - Completion webhooks
+   - Completion webhooks for long-running tasks
 
-4. **Advanced Features**
-   - WebSocket support for real-time chat
-   - Streaming responses
-   - More tools (payment processing, calendar booking)
-   - Multi-user RBAC within tenants
-   - Cost forecasting & alerts
-   - Prometheus metrics export
+2. **Real-time Features**
+   - WebSocket support for streaming responses
+   - Server-Sent Events (SSE) for live updates
 
-## 📄 License
 
-MIT License - See LICENSE file for details
+3. **Additional Tools**
+   - Payment processing (Stripe integration)
+   - Calendar booking (Google Calendar API)
+   - Email sending (SendGrid/Resend)
+   - CRM integration (Salesforce, HubSpot)
 
-## 👥 Contact
+4. **Enterprise Features**
+   - Multi-user RBAC within tenants (admin, developer, viewer roles)
+   - Cost forecasting & budget alerts
+   - Rate limiting per tenant/agent
+   - Audit logs with compliance exports
+   - SSO integration (SAML, OAuth)
 
-For questions or issues, please open a GitHub issue or contact the development team.
 
----
-
-**Built with:** Python 3.11, FastAPI, PostgreSQL, SQLAlchemy, Pydantic, Tenacity
-
-**Assignment:** VocalBridge Ops - Stitchfin Take-Home Project (Dec 2025)
